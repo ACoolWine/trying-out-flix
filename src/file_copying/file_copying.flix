@@ -1,10 +1,10 @@
 import java.io.File
 def copyAndPaste(): Unit \ {IO} = {
     let res = run {
-        let path1 = ".\\copyFrom.txt";
-        let path2 = ".\\copyTo.txt";
-        let text = readFile(path1);
-        writeFile(path2, text)
+        let path1 = ".\\src\\file_copying\\copyFrom.txt";
+        let path2 = ".\\src\\file_copying\\copyTo.txt";
+        let text = FileRead.read(path1);
+        FileWrite.write({str=text}, path2)
     } with FileRead.runWithIO
     with FileWrite.runWithIO;
     println(res);
