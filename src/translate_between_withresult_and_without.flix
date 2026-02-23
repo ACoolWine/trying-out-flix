@@ -10,15 +10,15 @@ def runit(): Unit \ IO = {
 
     println(""); println(first_res); println("");
     
-    let fala2 = run {
-        let fala = translateToWithResult(usingBaseDNS)();
+    let second_res = run {
         usingDNSWithResult();
-        fala
+        translateToWithResult(usingBaseDNS)()
     } with DnsWithResult.runWithIO;
-    match fala2 {
+    match second_res {
         case Ok(x) => x
         case Err(_) => println("oopsie nops")
     };
+    println(""); println(second_res); println("");
     ()
 }
 
