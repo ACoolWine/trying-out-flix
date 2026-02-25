@@ -66,10 +66,16 @@ def testConsoleHandlerErrVersion201(): Unit \ Assert + IO =
     let expected = "${RichString.toString(RichString.bold(RichString.red("[Fatal]")))} Some string";
     Assert.assertEq(expected="Logging to Console stderr: " + expected, res)
 
-
-
-
-
+def runWithConsole02(): Unit \ Assert = 
+    let m = RichString.fromString("Testing a warning string");
+    let s = Severity.Warn;
+    let res = run {
+        Logger.log(s, m);
+        ""
+    } with runWithConsoleErrVersion
+    with consoleHandlerStubErrVersion;
+    let expected = "${RichString.toString(RichString.yellow("[Warn]"))} Testing a warning string";
+    Assert.assertEq(expected="Logging to Console stderr: " + expected, res)
 
 
 def consoleHandlerStubErrVersion(g: Unit -> String \ ef): String \ (ef - Console) = 
@@ -89,13 +95,24 @@ def consoleHandlerStubErrVersion(g: Unit -> String \ ef): String \ (ef - Console
         }
     }
 
-def runWithConsole02(): Unit \ Assert = 
-    let m = RichString.fromString("Testing a warning string");
+def handleWithConsoleFun01(): Unit \ Assert = 
+    let m = RichString.fromString("Testing a warning string with a stdout fun");
     let s = Severity.Warn;
     let res = run {
         Logger.log(s, m);
         ""
-    } with runWithConsoleErrVersion
+    } with runWithConsoleFun(Console.println)
     with consoleHandlerStubErrVersion;
-    let expected = "${RichString.toString(RichString.yellow("[Warn]"))} Testing a warning string";
+    let expected = "${RichString.toString(RichString.yellow("[Warn]"))} Testing a warning string with a stdout fun";
+    Assert.assertEq(expected="Logging to Console stdout: " + expected, res)
+
+def handleWithConsoleFun02(): Unit \ Assert = 
+    let m = RichString.fromString("Testing a debug string with a stderr fun");
+    let s = Severity.Debug;
+    let res = run {
+        Logger.log(s, m);
+        ""
+    } with runWithConsoleFun(Console.eprintln)
+    with consoleHandlerStubErrVersion;
+    let expected = "${RichString.toString(RichString.cyan("[Debug]"))} Testing a debug string with a stderr fun";
     Assert.assertEq(expected="Logging to Console stderr: " + expected, res)
