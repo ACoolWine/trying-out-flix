@@ -2,6 +2,8 @@ import java.time.{LocalDateTime => JLocalDateTime}
 
 enum Time (JLocalDateTime)
 
+
+////////// Not needed for Clock 6 ////////////
 mod Time {
     import java.time.{LocalDateTime => JLocalDateTime}
     import java.time.format.DateTimeFormatter

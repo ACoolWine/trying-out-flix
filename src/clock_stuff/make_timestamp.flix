@@ -21,22 +21,51 @@ def runWithClock5(): Unit \ IO =
         let tsString = Time.makeTimeString(ts);
         println("Non-object clock first time: ${Clock3.getTimeStamp()}");
         println("Object clock first time: ${tsString}");
-        mywait(3);
+        mywait_Clock5(3);
+        let tsString2 = Time.makeTimeString(ts);
         println("Non-object clock second time: ${Clock3.getTimeStamp()}");
-        println("Object clock second time: ${tsString}")
+        println("Object clock second time: ${tsString2}")
     } with Clock5.runWithIO 
     with Clock3.runWithIO
 
+def runWithClock6_main(): Unit \ IO = 
+    run {
+        let ts = Clock6.getTimeObj();
+        let tsString = runWithClock6_helper(ts);
+        println("Object clock first time: ${tsString}");
+        mywait_Clock6(3);
+        let tsString2 = runWithClock6_helper(ts);
+        println("Object clock second time: ${tsString2}")
+    } with Clock6.runWithIO
 
-def myrecDelay(f: Unit -> b \ ef, delay_t: Int64, now: Int64): b \ {Clock5} + ef = 
+def runWithClock6_helper(ts: Time): String \ Clock6 = 
+    Clock6.getFormattedTimestamp(ts)
+
+
+///////////////// Wait function for Clock 5//////////////////////
+def myrecDelay_Clock5(f: Unit -> b \ ef, delay_t: Int64, now: Int64): b \ {Clock5} + ef = 
     let newTime = Clock5.currentTime(TimeUnit.Seconds);
     if (newTime > now + delay_t) {
         f()
     } else {
-        myrecDelay(f, delay_t, now)
+        myrecDelay_Clock5(f, delay_t, now)
     }
 
-def mywait(t: Int32): Unit \ Clock5 = 
+def mywait_Clock5(t: Int32): Unit \ Clock5 = 
     let now = Clock5.currentTime(TimeUnit.Seconds);
     let t_64 = Int32.toInt64(t);
-    myrecDelay(() -> (), t_64, now)
+    myrecDelay_Clock5(() -> (), t_64, now)
+
+///////////////// Wait function for Clock 6//////////////////////
+def myrecDelay_Clock6(f: Unit -> b \ ef, delay_t: Int64, now: Int64): b \ {Clock6} + ef = 
+    let newTime = Clock6.currentTime(TimeUnit.Seconds);
+    if (newTime > now + delay_t) {
+        f()
+    } else {
+        myrecDelay_Clock6(f, delay_t, now)
+    }
+
+def mywait_Clock6(t: Int32): Unit \ Clock6 = 
+    let now = Clock6.currentTime(TimeUnit.Seconds);
+    let t_64 = Int32.toInt64(t);
+    myrecDelay_Clock6(() -> (), t_64, now)
