@@ -86,7 +86,7 @@ pub def runWithConsoleFun(consoleFun: String -> d \ ef1, f: Unit -> a \ ef2): a 
 ///
 /// Prints to standard out.
 ///
-pub def handleWithConsoleStdOut(f: a -> b \ ef): (a -> b \ ef - Logger + Console) = 
+pub def handleWithStdOut(f: a -> b \ ef): (a -> b \ ef - Logger + Console) = 
     x -> run {
         f(x)
     } with handler Logger {
@@ -111,7 +111,7 @@ pub def handleWithConsoleStdOut(f: a -> b \ ef): (a -> b \ ef - Logger + Console
 ///
 /// Prints to standard out.
 ///
-pub def runWithConsoleStdOut(f: Unit -> a \ ef): a \ ef - Logger + Console = handleWithConsoleStdOut(f)()
+pub def runWithStdOut(f: Unit -> a \ ef): a \ ef - Logger + Console = handleWithStdOut(f)()
 
 ///
 /// Handles the `Logger` effect of the given function `f`.
@@ -120,7 +120,7 @@ pub def runWithConsoleStdOut(f: Unit -> a \ ef): a \ ef - Logger + Console = han
 ///
 /// Prints to standard error.
 ///
-pub def handleWithConsoleStdErr(f: a -> b \ ef): (a -> b \ ef - Logger + Console) = 
+pub def handleWithStdErr(f: a -> b \ ef): (a -> b \ ef - Logger + Console) = 
     x -> run {
         f(x)
     } with handler Logger {
@@ -145,4 +145,4 @@ pub def handleWithConsoleStdErr(f: a -> b \ ef): (a -> b \ ef - Logger + Console
 ///
 /// Prints to standard error.
 ///
-pub def runWithConsoleStdErr(f: Unit -> a \ ef): a \ ef - Logger + Console = handleWithConsoleStdErr(f)()
+pub def runWithConsoleStdErr(f: Unit -> a \ ef): a \ ef - Logger + Console = handleWithStdErr(f)()
