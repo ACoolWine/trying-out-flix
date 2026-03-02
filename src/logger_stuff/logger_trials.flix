@@ -145,4 +145,4 @@ pub def handleWithStdErr(f: a -> b \ ef): (a -> b \ ef - Logger + Console) =
 ///
 /// Prints to standard error.
 ///
-pub def runWithStdErr(f: Unit -> a \ ef): a \ ef - Logger + Console = handleWithStdErr(f)()
+pub def runWithConsoleStdErr(f: Unit -> a \ ef): a \ ef - Logger + Console = handleWithStdErr(f)()
