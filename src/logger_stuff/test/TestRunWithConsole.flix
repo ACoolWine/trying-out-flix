@@ -1,3 +1,5 @@
+use Sys.Console
+
 def testRunWithConsole01(): Unit \ IO = 
     let m = RichString.fromString("Some string");
     let s = Severity.Fatal;

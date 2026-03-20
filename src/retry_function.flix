@@ -1,3 +1,7 @@
+use Net.Dns
+use Time.Clock
+use Time.TimeUnit
+
 def retryOnFail(x: Int32, f: a -> Result[b, c] \ ef): (a -> Result[b, c] \ ef + IO) = {
     y -> {
         let res = f(y);
@@ -16,15 +20,15 @@ def retryOnFail(x: Int32, f: a -> Result[b, c] \ ef): (a -> Result[b, c] \ ef + 
 
 def runDnsWithRetry(): Unit \ IO = {
     let res = run {
-        retryOnFail(2, DnsWithResult.lookup)("wikipedia.org")
-    } with DnsWithResult.runWithIO;
+        retryOnFail(2, Dns.lookup)("wikipedia.org")
+    } with Dns.runWithIO;
     println(res)
 }
 
 def runDnsWithRetry_HandlerVersion(): Unit \ IO = {
     let res = run {
-        DnsWithResult.lookup("wikipedia.org")
-    } with retryOnFail(2, DnsWithResult.runWithIO);
+        Dns.lookup("wikipedia.org")
+    } with retryOnFail(2, Dns.runWithIO);
     println(res)
 }
 

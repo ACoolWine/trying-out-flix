@@ -1,7 +1,9 @@
 use Assert.{assertEq, assertTrue, assertFalse, assertOk, assertErr}
+use Sys.Console
+use Math.Random
 
 eff RandNumber {
-    def generateRandomNumber(): Int32
+    def generateRandomNumber(): Int64
 }
 
 eff Guess {
@@ -12,13 +14,13 @@ eff Terminal {
     def print(str: String): Unit 
 }
 
-def readAndParseGuess(): Result[String, Int32] \ Guess = {
+def readAndParseGuess(): Result[String, Int64] \ Guess = {
     let guess = Guess.makeGuess();
-    let guessParsed = Int32.parse(10, guess);
+    let guessParsed = Int64.parse(10, guess);
     guessParsed
 }
 
-def gameLoop2(secret: Int32): Int32 \ {Terminal, Guess} = {
+def gameLoop2(secret: Int64): Int64 \ {Terminal, Guess} = {
     let parsedGuess = match readAndParseGuess() {
         case Result.Ok(g) => {
             if (secret == g) 
@@ -28,12 +30,12 @@ def gameLoop2(secret: Int32): Int32 \ {Terminal, Guess} = {
                 let correct = gameLoop2(secret);
                 correct
             }}
-        case Result.Err(_) => {Terminal.print("Not a number, buhbye!"); -1}
+        case Result.Err(_) => {Terminal.print("Not a number, buhbye!"); -1i64}
     };
     parsedGuess
 } 
 
-def gameLoop1(): Int32 \ {RandNumber, Terminal, Guess} = {
+def gameLoop1(): Int64 \ {RandNumber, Terminal, Guess} = {
     let secret = RandNumber.generateRandomNumber();
 
     Terminal.print("Guess a number between 0 and 9: "); 
@@ -42,11 +44,11 @@ def gameLoop1(): Int32 \ {RandNumber, Terminal, Guess} = {
 }
 
 def playGame(): Unit \ {IO, NonDet, Console} = {
-    let numberBound = 10;
+    let numberBound = 10i64;
     let _ = run { gameLoop1() } with handler RandNumber {
         def generateRandomNumber(resume) = {
-            let rnd = Random.randomInt32(); 
-            let rndBounded = Int32.modulo(rnd, numberBound); 
+            let rnd = Random.randomInt64(); 
+            let rndBounded = Int64.modulo(rnd, numberBound); 
             resume(rndBounded)
         }
     } with Random.runWithIO with handler Guess {
@@ -64,7 +66,7 @@ def testCorrectGuess(): Unit \ Assert + {IO, NonDet, Console} = {
     let actual = run { 
         gameLoop1() 
     } with handler RandNumber {
-        def generateRandomNumber(resume) = resume(5)
+        def generateRandomNumber(resume) = resume(5i64)
     } with handler Guess {
         def makeGuess(resume) = { 
             println("Guessing 5"); 
@@ -73,7 +75,7 @@ def testCorrectGuess(): Unit \ Assert + {IO, NonDet, Console} = {
     } with handler Terminal {
         def print(str, resume) = {println(str); resume()}
     };
-    assertEq(expected=5, actual);
+    assertEq(expected=5i64, actual);
     ()
 }
 

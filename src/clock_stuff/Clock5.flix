@@ -6,7 +6,7 @@ eff Clock5 {
     ///
     /// Returns a measure of time since the epoch in the given time unit `u`.
     ///
-    def currentTime(u: TimeUnit): Int64
+    def currentTime(u: Time.TimeUnit): Int64
 
     /// 
     /// Returns a `Time` object. 
@@ -30,7 +30,7 @@ pub mod Clock5 {
     ///
     /// Equivalent to `currentTime(TimeUnit.Milliseconds)`.
     ///
-    pub def now(): Int64 \ Clock5 = Clock5.currentTime(TimeUnit.Milliseconds)
+    pub def now(): Int64 \ Clock5 = Clock5.currentTime(Time.TimeUnit.Milliseconds)
 
     ///
     /// Handles the `Clock` effect of the given function `f`.
@@ -45,13 +45,13 @@ pub mod Clock5 {
                 let time = System.currentTimeMillis();
                 let ms = JTimeUnit.MILLISECONDS;
                 match u {
-                    case TimeUnit.Days          => k(ms.toDays(time))
-                    case TimeUnit.Hours         => k(ms.toHours(time))
-                    case TimeUnit.Microseconds  => k(ms.toMicros(time))
-                    case TimeUnit.Milliseconds  => k(ms.toMillis(time))
-                    case TimeUnit.Minutes       => k(ms.toMinutes(time))
-                    case TimeUnit.Nanoseconds   => k(ms.toNanos(time))
-                    case TimeUnit.Seconds       => k(ms.toSeconds(time))
+                    case Time.TimeUnit.Days          => k(ms.toDays(time))
+                    case Time.TimeUnit.Hours         => k(ms.toHours(time))
+                    case Time.TimeUnit.Microseconds  => k(ms.toMicros(time))
+                    case Time.TimeUnit.Milliseconds  => k(ms.toMillis(time))
+                    case Time.TimeUnit.Minutes       => k(ms.toMinutes(time))
+                    case Time.TimeUnit.Nanoseconds   => k(ms.toNanos(time))
+                    case Time.TimeUnit.Seconds       => k(ms.toSeconds(time))
                 }
             def getTimeObj(k) = 
                 let timestamp = LocalDateTime.now();

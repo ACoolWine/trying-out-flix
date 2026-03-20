@@ -1,16 +1,16 @@
 use RichString.{gray, cyan, green, yellow, red, bold, text};
 
-def trying_logger(): Unit \ Console = {
+def trying_logger(): Unit \ Sys.Console = {
     let _ = run {
         Logger.info(42);
-        Console.println("Wassup bud?");
-        Console.eprintln("I'm an err print, man")
+        Sys.Console.println("Wassup bud?");
+        Sys.Console.eprintln("I'm an err print, man")
     } with runWithConsole;
     ()
 }
 
 // Version 1
-def handleWithConsole(f: a -> b \ ef): (a -> b \ ef - Logger + Console) = 
+def handleWithConsole(f: a -> b \ ef): (a -> b \ ef - Logger + Sys.Console) = 
     x -> run {
         f(x)
     } with handler Logger {
@@ -23,16 +23,16 @@ def handleWithConsole(f: a -> b \ ef): (a -> b \ ef - Logger + Console) =
                 case Severity.Warn  => yellow("[Warn]")
             };
             let output = prefix + text(" ") + m;
-            Console.println(RichString.toString(output));
+            Sys.Console.println(RichString.toString(output));
             k()
         }
     }
 
-def runWithConsole(f: Unit -> a \ ef): a \ ef - Logger + Console = handleWithConsole(f)()
+def runWithConsole(f: Unit -> a \ ef): a \ ef - Logger + Sys.Console = handleWithConsole(f)()
 
 
 // Version 2
-def handleWithConsoleErrVersion(f: a -> b \ ef): (a -> b \ ef - Logger + Console) =
+def handleWithConsoleErrVersion(f: a -> b \ ef): (a -> b \ ef - Logger + Sys.Console) =
     x -> run {
         f(x)
     } with handler Logger {
@@ -46,14 +46,14 @@ def handleWithConsoleErrVersion(f: a -> b \ ef): (a -> b \ ef - Logger + Console
             };
             let output = prefix + text(" ") + m;
             if (s==Severity.Warn or s==Severity.Fatal) 
-                Console.eprintln(RichString.toString(output))
+                Sys.Console.eprintln(RichString.toString(output))
             else
-                Console.println(RichString.toString(output));
+                Sys.Console.println(RichString.toString(output));
             k()
         }
     }
 
-def runWithConsoleErrVersion(f: Unit -> a \ ef): a \ ef - Logger + Console = handleWithConsoleErrVersion(f)()
+def runWithConsoleErrVersion(f: Unit -> a \ ef): a \ ef - Logger + Sys.Console = handleWithConsoleErrVersion(f)()
 
 
 //Version 3
@@ -86,7 +86,7 @@ pub def runWithConsoleFun(consoleFun: String -> d \ ef1, f: Unit -> a \ ef2): a 
 ///
 /// Prints to standard out.
 ///
-pub def handleWithStdOut(f: a -> b \ ef): (a -> b \ ef - Logger + Console) = 
+pub def handleWithStdOut(f: a -> b \ ef): (a -> b \ ef - Logger + Sys.Console) = 
     x -> run {
         f(x)
     } with handler Logger {
@@ -99,7 +99,7 @@ pub def handleWithStdOut(f: a -> b \ ef): (a -> b \ ef - Logger + Console) =
                 case Severity.Warn  => yellow("[Warn]")
             };
             let output = prefix + text(" ") + m;
-            Console.println(RichString.toString(output));
+            Sys.Console.println(RichString.toString(output));
             k()
         }
     }
@@ -111,7 +111,7 @@ pub def handleWithStdOut(f: a -> b \ ef): (a -> b \ ef - Logger + Console) =
 ///
 /// Prints to standard out.
 ///
-pub def runWithStdOut(f: Unit -> a \ ef): a \ ef - Logger + Console = handleWithStdOut(f)()
+pub def runWithStdOut(f: Unit -> a \ ef): a \ ef - Logger + Sys.Console = handleWithStdOut(f)()
 
 ///
 /// Handles the `Logger` effect of the given function `f`.
@@ -120,7 +120,7 @@ pub def runWithStdOut(f: Unit -> a \ ef): a \ ef - Logger + Console = handleWith
 ///
 /// Prints to standard error.
 ///
-pub def handleWithStdErr(f: a -> b \ ef): (a -> b \ ef - Logger + Console) = 
+pub def handleWithStdErr(f: a -> b \ ef): (a -> b \ ef - Logger + Sys.Console) = 
     x -> run {
         f(x)
     } with handler Logger {
@@ -133,7 +133,7 @@ pub def handleWithStdErr(f: a -> b \ ef): (a -> b \ ef - Logger + Console) =
                 case Severity.Warn  => yellow("[Warn]")
             };
             let output = prefix + text(" ") + m;
-            Console.eprintln(RichString.toString(output));
+            Sys.Console.eprintln(RichString.toString(output));
             k()
         }
     }
@@ -145,4 +145,4 @@ pub def handleWithStdErr(f: a -> b \ ef): (a -> b \ ef - Logger + Console) =
 ///
 /// Prints to standard error.
 ///
-pub def runWithConsoleStdErr(f: Unit -> a \ ef): a \ ef - Logger + Console = handleWithStdErr(f)()
+pub def runWithStdErr(f: Unit -> a \ ef): a \ ef - Logger + Sys.Console = handleWithStdErr(f)()

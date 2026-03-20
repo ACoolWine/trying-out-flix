@@ -44,7 +44,7 @@ def runWithClock6_helper(ts: Time): String \ Clock6 =
 
 ///////////////// Wait function for Clock 5//////////////////////
 def myrecDelay_Clock5(f: Unit -> b \ ef, delay_t: Int64, now: Int64): b \ {Clock5} + ef = 
-    let newTime = Clock5.currentTime(TimeUnit.Seconds);
+    let newTime = Clock5.currentTime(Time.TimeUnit.Seconds);
     if (newTime > now + delay_t) {
         f()
     } else {
@@ -52,13 +52,13 @@ def myrecDelay_Clock5(f: Unit -> b \ ef, delay_t: Int64, now: Int64): b \ {Clock
     }
 
 def mywait_Clock5(t: Int32): Unit \ Clock5 = 
-    let now = Clock5.currentTime(TimeUnit.Seconds);
+    let now = Clock5.currentTime(Time.TimeUnit.Seconds);
     let t_64 = Int32.toInt64(t);
     myrecDelay_Clock5(() -> (), t_64, now)
 
 ///////////////// Wait function for Clock 6//////////////////////
 def myrecDelay_Clock6(f: Unit -> b \ ef, delay_t: Int64, now: Int64): b \ {Clock6} + ef = 
-    let newTime = Clock6.currentTime(TimeUnit.Seconds);
+    let newTime = Clock6.currentTime(Time.TimeUnit.Seconds);
     if (newTime > now + delay_t) {
         f()
     } else {
@@ -66,6 +66,6 @@ def myrecDelay_Clock6(f: Unit -> b \ ef, delay_t: Int64, now: Int64): b \ {Clock
     }
 
 def mywait_Clock6(t: Int32): Unit \ Clock6 = 
-    let now = Clock6.currentTime(TimeUnit.Seconds);
+    let now = Clock6.currentTime(Time.TimeUnit.Seconds);
     let t_64 = Int32.toInt64(t);
     myrecDelay_Clock6(() -> (), t_64, now)

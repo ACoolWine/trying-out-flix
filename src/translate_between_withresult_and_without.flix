@@ -1,3 +1,8 @@
+///
+/// The below is deprecated. It translates between Dns and DnsWithResult, which has been removed.
+/// 
+
+/*
 def runit(): Unit \ IO = {
     let first_res = run {
         usingBaseDNS();
@@ -70,3 +75,4 @@ def usingDNSWithResult(): Unit \ {IO, DnsWithResult} = {
         case Err(_) => println("WithResult DNS error (as part of running the DNS method)")
     }
 }
+*/
