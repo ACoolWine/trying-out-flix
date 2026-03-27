@@ -41,8 +41,8 @@ def runDnsWithRetry_WithoutResult(): Unit \ IO = {
 
 def runFileReadWithRetry(): Unit \ IO = {
     let res = run {
-        retryOnFail(5, FileReadWithResult.exists)(".\\src\\print_trials.flix")
-    } with FileReadWithResult.runWithIO;
+        retryOnFail(5, Fs.FileTest.exists)(".\\src\\print_trials.flix")
+    } with Fs.FileTest.runWithIO;
     println(res)
 }
 
