@@ -13,14 +13,14 @@ eff Clock6 {
     ///
     /// Uses Javas LocalDateTime.
     /// 
-    def getTimeObj(): Time
+    def getTimeObj(): Time2
 
     /// 
     /// Returns a String of the date and time contained in `timeObj`. 
     ///
     /// Uses Javas DateTimeFormatter and a predefined format.
     /// 
-    def getFormattedTimestamp(timeObj: Time): String
+    def getFormattedTimestamp(timeObj: Time2): String
 
 }
 
@@ -62,11 +62,11 @@ pub mod Clock6 {
                 }
             def getTimeObj(k) = 
                 let timestamp = LocalDateTime.now();
-                k(Time.Time(timestamp))
+                k(Time2.Time2(timestamp))
             def getFormattedTimestamp(timeObj, k) = 
                 let formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 let javaObj = match timeObj {
-                    case Time.Time(javaObj) => javaObj
+                    case Time2.Time2(javaObj) => javaObj
                 };
                 k(javaObj.format(formatter))
         }

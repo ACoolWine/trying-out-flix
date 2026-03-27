@@ -13,7 +13,7 @@ eff Clock5 {
     ///
     /// Uses Javas LocalDateTime.
     /// 
-    def getTimeObj(): Time
+    def getTimeObj(): Time2
 
 }
 
@@ -55,7 +55,7 @@ pub mod Clock5 {
                 }
             def getTimeObj(k) = 
                 let timestamp = LocalDateTime.now();
-                k(Time.Time(timestamp))
+                k(Time2.Time2(timestamp))
         }
 
     ///

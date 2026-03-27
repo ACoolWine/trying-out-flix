@@ -18,11 +18,11 @@ def runWithClock4(): Unit \ IO =
 def runWithClock5(): Unit \ IO = 
     run {
         let ts = Clock5.getTimeObj();
-        let tsString = Time.makeTimeString(ts);
+        let tsString = Time2.makeTimeString(ts);
         println("Non-object clock first time: ${Clock3.getTimeStamp()}");
         println("Object clock first time: ${tsString}");
         mywait_Clock5(3);
-        let tsString2 = Time.makeTimeString(ts);
+        let tsString2 = Time2.makeTimeString(ts);
         println("Non-object clock second time: ${Clock3.getTimeStamp()}");
         println("Object clock second time: ${tsString2}")
     } with Clock5.runWithIO 
@@ -38,7 +38,7 @@ def runWithClock6_main(): Unit \ IO =
         println("Object clock second time: ${tsString2}")
     } with Clock6.runWithIO
 
-def runWithClock6_helper(ts: Time): String \ Clock6 = 
+def runWithClock6_helper(ts: Time2): String \ Clock6 = 
     Clock6.getFormattedTimestamp(ts)
 
 
