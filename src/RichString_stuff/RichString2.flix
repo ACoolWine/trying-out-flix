@@ -1,3 +1,4 @@
+import java.lang.Comparable
 /*
  * Copyright 2025 Magnus Madsen
  *
@@ -43,6 +44,10 @@ instance Formattable2[RichString2] {
 
 instance Eq[RichString2] {
     pub def eq(x: RichString2, y: RichString2): Bool = RichString2.equals(x, y)
+}
+
+instance Order[RichString2] {
+    pub def compare(x: RichString2, y: RichString2): Comparison = RichString2.compare(x, y)
 }
 
 pub mod RichString2 {
@@ -97,15 +102,6 @@ pub mod RichString2 {
     ///
     pub enum Span {
         case Span({text = String, fgColor = Color, bgColor = Color, styles = Set[Style]})
-    }
-
-    ///
-    ///
-    ///
-    instance Order[Span] {
-        pub def compare(s1: Span, s2: Span): Comparison = match (s1, s2) {
-            case _ => ???
-        }
     }
 
     ///
@@ -165,6 +161,45 @@ pub mod RichString2 {
         let Span.Span({text = t2, fgColor = fg2, bgColor = bg2, styles = style2}) = s2;
         t1 == t2 and fg1 == fg2 and bg1 == bg2 and style1 == style2
 
+    ///
+    /// Returns a `Comparison` of `rs1` and `rs2`.
+    ///
+    /// Compares text, fgColor, bgColor and styling for each individual character in that order of priority.
+    ///
+    /// If `rs1` or `rs2` is a prefix of the other, it will compare the lengths of the 
+    ///
+    pub def compare(rs1: RichString2, rs2: RichString2): Comparison = 
+        let (RichString2(chain1), RichString2(chain2)) = (rs1, rs2);
+        let splitSpans = (match Span.Span({text = t, fgColor = fg, bgColor = bg, styles}) -> { 
+            String.toList(t) |> List.toChain |> Chain.map(c -> (Span.Span({text = Char.toString(c), fgColor = fg, bgColor = bg, styles = styles})))
+        });
+        let l1 = Chain.flatMap(splitSpans, chain1);
+        let l2 = Chain.flatMap(splitSpans, chain2);
+        let mismatch = Chain.zip(l1, l2) |> Chain.findLeft((match (e1, e2) -> spanCompare(e1, e2) != Comparison.EqualTo));
+        let res = match mismatch {
+            case Some((s1, s2)) => spanCompare(s1, s2)
+            case None => 
+                if (Chain.length(l1) < Chain.length(l2)) Comparison.LessThan
+                else if (Chain.length(l1) > Chain.length(l2)) Comparison.GreaterThan
+                else Comparison.EqualTo
+        };
+        res
+
+    def spanCompare(s1: Span, s2: Span): Comparison = {
+        let Span.Span({text = t1, fgColor = fg1, bgColor = bg1, styles = styles1}) = s1;
+        let Span.Span({text = t2, fgColor = fg2, bgColor = bg2, styles = styles2}) = s2;
+
+        let is_t_equal = t1 <=> t2 != Comparison.EqualTo;
+        let is_fg_equal = fg1 <=> fg2 != Comparison.EqualTo;
+        let is_bg_equal = bg1 <=> bg2 != Comparison.EqualTo;
+        let is_style_equal = styles1 <=> styles2 != Comparison.EqualTo;
+
+        if (is_t_equal) t1 <=> t2 
+        else if (is_style_equal) styles1 <=> styles2
+        else if (is_fg_equal) fg1 <=> fg2
+        else if (is_bg_equal) bg1 <=> bg2
+        else Comparison.EqualTo
+    }
     ///
     /// Returns a `RichString2` from given text `x` with all spans updated to use the given foreground color `c`.
     ///
