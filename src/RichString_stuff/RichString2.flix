@@ -1,4 +1,3 @@
-import java.lang.Comparable
 /*
  * Copyright 2025 Magnus Madsen
  *
@@ -46,9 +45,9 @@ instance Eq[RichString2] {
     pub def eq(x: RichString2, y: RichString2): Bool = RichString2.equals(x, y)
 }
 
-instance Order[RichString2] {
-    pub def compare(x: RichString2, y: RichString2): Comparison = RichString2.compare(x, y)
-}
+// instance Order[RichString2] {
+//     pub def compare(x: RichString2, y: RichString2): Comparison = RichString2.compare(x, y)
+// }
 
 pub mod RichString2 {
 
@@ -72,14 +71,14 @@ pub mod RichString2 {
     ///
     instance Order[Color] {
         pub def compare(c1: Color, c2: Color): Comparison = match (c1, c2) {
-            case (Color.Default, Color.Default) => c1 <=> c2
+            case (Color.Default, Color.Default) => Comparison.EqualTo
             case (Color.Rgb(r1, g1, b1), Color.Rgb(r2, g2, b2)) => 
-                let comp_r = r1 <=> r2;
-                let comp_g = g1 <=> g2;
-                let comp_b = b1 <=> b2;
-                if (comp_r != Comparison.EqualTo) comp_r 
-                else if (comp_g != Comparison.EqualTo) comp_g
-                else comp_b
+                let is_r_equal = r1 <=> r2 != Comparison.EqualTo;
+                let is_g_equal = g1 <=> g2 != Comparison.EqualTo;
+
+                if (not is_r_equal) r1 <=> r2 
+                else if (not is_g_equal) g1 <=> g2
+                else b1 <=> b2
             case (Color.Default, Color.Rgb(_,_,_)) => Comparison.LessThan
             case (Color.Rgb(_,_,_), Color.Default) => Comparison.GreaterThan
         }
@@ -168,17 +167,20 @@ pub mod RichString2 {
     ///
     /// If `rs1` or `rs2` is a prefix of the other, it will compare the lengths of the 
     ///
-    pub def compare(rs1: RichString2, rs2: RichString2): Comparison = 
+    pub def compare(rs1: RichString2, rs2: RichString2): Comparison \ IO =
         let (RichString2(chain1), RichString2(chain2)) = (rs1, rs2);
         let splitSpans = (match Span.Span({text = t, fgColor = fg, bgColor = bg, styles}) -> { 
             String.toList(t) |> List.toChain |> Chain.map(c -> (Span.Span({text = Char.toString(c), fgColor = fg, bgColor = bg, styles = styles})))
         });
         let l1 = Chain.flatMap(splitSpans, chain1);
         let l2 = Chain.flatMap(splitSpans, chain2);
+        println("Now finding mismatch");
         let mismatch = Chain.zip(l1, l2) |> Chain.findLeft((match (e1, e2) -> spanCompare(e1, e2) != Comparison.EqualTo));
-        let res = match mismatch {
-            case Some((s1, s2)) => spanCompare(s1, s2)
+        println("I have found mismatch");
+        let res = match {println("This is so cringe"); mismatch} { 
+            case Some((s1, s2)) => println("jsjsjsjsjs"); spanCompare(s1, s2)
             case None => 
+                println("I was here");
                 if (Chain.length(l1) < Chain.length(l2)) Comparison.LessThan
                 else if (Chain.length(l1) > Chain.length(l2)) Comparison.GreaterThan
                 else Comparison.EqualTo
@@ -200,6 +202,7 @@ pub mod RichString2 {
         else if (is_bg_equal) bg1 <=> bg2
         else Comparison.EqualTo
     }
+
     ///
     /// Returns a `RichString2` from given text `x` with all spans updated to use the given foreground color `c`.
     ///
